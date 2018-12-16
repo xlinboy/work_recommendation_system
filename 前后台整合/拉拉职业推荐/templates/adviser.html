@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>登陆</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <link rel="stylesheet" href="/static/css/layui.css">
+    <script src="/static/jquery.js"></script>
+</head>
+<body>
+{% include "admin.html" %}
+
+<div class="layui-body" style="padding-top: 100px; padding-left: 50px; width: 80%">
+    <form id="pageform" action="/base/register" method="post">
+        <input type="hidden" name="curr" value="{{ curr }}" id="curr">
+        <input type="hidden" name="pagesize" value="{{ pagesize }}" id="pagesize">
+        <div class="padding: 20px;">
+            <div class="layui-form-item">
+                <label class="layui-form-label">职位搜索</label>
+                <div class="layui-input-block">
+                    <input type="text" name="job_title" placeholder="搜索职位"
+                           autocomplete="off" class="layui-input" value="{{ job_title }}">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">工作经验</label>
+                <div class="layui-input-block">
+                    <select name="experience" class="layui-select">
+                        <option value="0" {% if exp == '0' %} selected {% endif %}>无</option>
+                        <option value="1" {% if exp == '1' %} selected {% endif %}>1-3年</option>
+                        <option value="3" {% if exp == '3' %} selected {% endif %}>3-5年</option>
+                        <option value="5" {% if exp == '5' %} selected {% endif %}>5-10年</option>
+                        <option value="10" {% if exp == '10' %} selected {% endif %}>10年以上</option>
+                        <option {% if exp == null %} selected {% endif %}>不限</option>
+                    </select>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">月薪</label>
+                <div class="layui-input-block">
+                    <select name="salary" class="layui-select">
+                        <option value="2500" {% if sal == '2500' %} selected {% endif %}>2K-5K</option>
+                        <option value="8000" {% if sal == '8000' %} selected {% endif %}>5K-10K</option>
+                        <option value="13000" {% if sal == '13000' %} selected {% endif %}>10K-15K</option>
+                        <option value="20000" {% if sal == '20000' %} selected {% endif %}>15K-25K</option>
+                        <option value="40000" {% if sal == '40000' %} selected {% endif %}>25K-50K</option>
+                        <option value="50000" {% if sal == '50000' %} selected {% endif %}>50K以上</option>
+                        <option {% if sal == null %} selected {% endif %}>不限</option>
+                    </select>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">学历要求</label>
+                <div class="layui-input-block">
+                    <select name="education" class="layui-select">
+                        <option {% if edu == null %} selected {% endif %} >不限</option>
+                        <option value="1" {% if edu == '大专' %} selected {% endif %}>大专</option>
+                        <option value="2" {% if edu == '本科' %} selected {% endif %}>本科</option>
+                        <option value="3" {% if edu == '硕士' %} selected {% endif %}>硕士</option>
+                        <option value="4" {% if edu == '博士' %} selected {% endif %}>博士</option>
+                    </select>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">城市</label>
+                <div class="layui-input-block">
+                    <select name="city" class="layui-select">
+                        <option {% if city == null %} selected {% endif %}>不限</option>
+                        <option value="1" {% if city == '北京' %} selected {% endif %}>北京</option>
+                        <option value="2" {% if city == '上海' %} selected {% endif %}>上海</option>
+                        <option value="3" {% if city == '广州' %} selected {% endif %}>广州</option>
+                        <option value="4" {% if city == '深圳' %} selected {% endif %}>深圳</option>
+                        <option value="5" {% if city == '杭州' %} selected {% endif %}>杭州</option>
+                    </select>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <button class="layui-btn" lay-submit lay-filter="formDemo">搜索</button>
+                    <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                </div>
+            </div>
+        </div>
+    </form>
+    <div class="padding: 20px;" style="background: grey">
+        <div class="layui-row layui-col-space15">
+            {% for item in items %}
+                <div class="layui-col-md6">
+                    <div class="layui-card">
+                        <div class="layui-card-header"><h2>{{ item[0] }}</h2></div>
+                        <div class="layui-card-body">
+                            <span>工作经验{{ item[1] }}年</span>
+                            <br>
+                            <span>学历要求:{% if item[2] == '-' %}不限{% else %}{{ item[2] }}{% endif %}</span>
+                            <br>
+                            <span>城市：{{ item[3] }}</span>
+                            <br>
+                            <span>薪水：{{ item[4] }}元/月</span>
+                            <br>
+                            <span>公司规模：{{ item[5] }}</span>
+                            <br>
+                            <span>职能：{{ item[6] }}</span>
+                            <br>
+                            <span>发布时间：{{ item[7] }}</span>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+    <div id="test1" style="width: 50%">
+
+    </div>
+</div>
+
+
+<script src="/static/layui.js"></script>
+
+<script>
+    //Demo
+    layui.use(['form', 'laypage', 'element'], function () {
+        var form = layui.form,
+            laypage = layui.laypage,
+            element = layui.element,
+            $ = layui.jquery;
+
+        //监听提交
+        form.on('submit(formDemo)', function (data) {
+            $('#pageform').submit()
+            return false;
+        });
+
+        laypage.render({
+            elem: 'test1' //注意，这里的 test1 是 ID，不用加 # 号
+            , count: {{ total }} //数据总数，从服务端得到
+            , groups: 5
+            , limit: 10
+            , curr: {{ curr }}
+            , jump: function (obj, first) {
+                if (!first) {
+                    console.log(obj.curr); //得到当前页，以便向服务端请求对应页的数据。
+                    console.log(obj.limit); //得到每页显示的条数
+
+                    $('#curr').val(obj.curr);
+                    $('#pagesize').val(obj.limit);
+                    $('#pageform').submit()
+                }
+
+            }
+        });
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,78 @@
+1. 统计出全国范围内，重要的省会城市及直辖市关于每一个工作岗位的薪资排序top10
+
+create table if not exists work.all_salay_top
+as
+select t1.* from (
+select t.*, row_number() over(partition by work_city ORDER by sal desc) as row_num
+from ( 
+select (max(salary)*0.4 + min(salary)*0.6) sal, position, work_city
+from work.job_info
+group by work_city, position
+order by sal, position desc) 
+t) t1
+where t1.row_num < 11 and sal < 500000;
+
+# 全国的公资最高的top10
+
+create table if not exists work.max_salary_top
+as
+select (max(salary)*0.4 + min(salary)*0.6) sal, position
+from work.job_info
+group by position
+having sal < 600000
+order by sal desc
+limit 10;
+			
+	2. ...薪资涨幅
+create table if not exists work.salary_top
+as
+select sal,  release_date from (
+select (max(salary)*0.4 + min(salary)*0.6) as sal, release_date
+from work.job_info
+where job_title like '%大数据%'
+group by release_date
+order by sal) t1
+order by unix_timestamp(release_date);
+
+
+
+select sal, position from (
+select (max(salary)*0.4 + min(salary)*0.6) as sal, position
+from work.job_info
+where release_date = '2018-11-29'
+group by position
+order by sal desc) t1
+where sal < 500000
+limit 10;
+
+
+	3. 同等工作经验的人群，重要的省会城市及直辖市薪资排名top10的岗位
+
+select t2.* from (
+select t1.*, row_number() over(partition by work_city order by sal desc) as row_num 
+from (
+select (max(salary)*0.4 + min(salary)*0.6) sal, position, work_city
+from work.job_info
+where work_experience >= 1 and work_experience < 3
+group by work_city, position ) t1 ) t2
+where t2.row_num < 11;
+
+
+# 4，具体工作岗位在每个城市热度
+select count(1) num, work_city
+from work.job_info
+where job_title like '%计算机软件%'
+group by work_city
+order by num desc;
+
+# 5， 热门城市发布岗位的热度 top10
+create table if not exists work.hot_city_work_top
+as
+select count(1) num, work_city
+from work.job_info
+group by work_city
+having num > 9
+order by num desc
+limit 10;
+
+

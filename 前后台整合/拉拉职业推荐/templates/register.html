@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>注册</title>
+    <link rel="stylesheet" href="/static/css/layui.css">
+</head>
+<body>
+{% include "admin.html" %}
+<form class="layui-form" action="/base/register" id="myform">
+    <div class="layui-body" style="width: 50%;">
+        <div style="padding-left: 50px; padding-top: 100px;">
+            <div class="layui-form-item">
+                <label class="layui-form-label">姓名</label>
+                <div class="layui-input-block">
+                    <input type="text" name="username" required lay-verify="required" placeholder="请输入您的姓名"
+                           autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">工作经验</label>
+                <div class="layui-input-block">
+                    <select name="experience">
+                        <option value="0">无</option>
+                        <option value="1">1-3年</option>
+                        <option value="3">3-5年</option>
+                        <option value="5">5-10年</option>
+                        <option value="10">10年以上</option>
+                        <option selected>不限</option>
+                    </select>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">学历</label>
+                <div class="layui-input-block">
+                    <select name="education">
+                        <option selected>不限</option>
+                        <option value="1">大专</option>
+                        <option value="2">本科</option>
+                        <option value="3">硕士</option>
+                        <option value="4">博士</option>
+                    </select>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">曾经呆过的公司</label>
+                <div class="layui-input-block">
+                    <input type="text" name="old_company" required lay-verify="required" placeholder="请填写公司名称"
+                           autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">最强技能</label>
+                <div class="layui-input-block">
+                    <input type="text" name="job_title" required lay-verify="required" placeholder="填写擅长技术"
+                           autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">入职时间</label>
+                <div class="layui-inline">
+                    <input type="text" name="edate" class="layui-input" id="test1">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">职能</label>
+                <div class="layui-input-block">
+                    <select name="position">
+                        <option selected>不限</option>
+                        <option value="1">大数据开发</option>
+                        <option value="2">C++工程师</option>
+                        <option value="3">Python开发工程师</option>
+                        <option value="4">全栈工程师</option>
+                        <option value="5">软件开发</option>
+                    </select>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">意向城市</label>
+                <div class="layui-input-block">
+                    <select name="city" lay-verify="required">
+                        <option value="1">北京</option>
+                        <option value="2">上海</option>
+                        <option value="3">广州</option>
+                        <option value="4">深圳</option>
+                        <option value="5">杭州</option>
+                        <option selected>不限</option>
+                    </select>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">月薪</label>
+                <div class="layui-input-block">
+                    <div class="layui-input-block">
+                        <select name="salary">
+                            <option value="2500">2K-5K</option>
+                            <option value="8000">5K-10K</option>
+                            <option value="13000">10K-15K</option>
+                            <option value="20000">15K-25K</option>
+                            <option value="40000">25K-50K</option>
+                            <option value="50000">50K以上</option>
+                            <option>不限</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">单选框</label>
+                <div class="layui-input-block">
+                    <input type="radio" name="sex" value="0" title="男" checked>
+                    <input type="radio" name="sex" value="1" title="女">
+                </div>
+            </div>
+            <div class="layui-form-item layui-form-text">
+                <label class="layui-form-label">工作经历描述</label>
+                <div class="layui-input-block">
+                    <textarea name="message" placeholder="请输入内容" class="layui-textarea"></textarea>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <button class="layui-btn" lay-submit lay-filter="formDemo">立即提交</button>
+                    <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</form>
+<script src="/static/layui.js?t=1542630986927"></script>
+
+<script>
+    layui.config({
+        version: '1542630986927' //为了更新 js 缓存，可忽略
+    });
+    //Demo
+    layui.use(['form', 'laydate', 'element'], function () {
+        var form = layui.form
+            , laydate = layui.laydate
+            , element = layui.element;
+        //监听提交
+        form.render('select');
+        form.on('submit(formDemo)', function (data) {
+            $('#myform').submit()
+            return false;
+        });
+
+        laydate.render({
+            elem: '#test1'
+        });
+    });
+</script>
+</body>
+</html>

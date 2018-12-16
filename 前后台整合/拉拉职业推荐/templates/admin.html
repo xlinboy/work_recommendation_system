@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>拉拉网</title>
+    <link rel="stylesheet" href="/static/css/layui.css">
+</head>
+<body class="layui-layout-body">
+<div class="layui-layout layui-layout-admin">
+    <div class="layui-header" style="color: white;">
+        <div class="layui-logo">
+            <span><img src="../static/3.jpg" style="height: 40px;width: 250px"></span>
+        </div>
+    </div>
+
+    <div class="layui-side layui-bg-black">
+        <div class="layui-side-scroll">
+            <ul class="layui-nav layui-nav-tree" lay-filter="test">
+                <li class="layui-nav-item layui-nav-itemed">
+                    <dl class="layui-nav-child">
+                        <dd><a href="/base/toregister">拉拉注册</a></dd>
+                        <dd><a href="javascript:;">拉拉登陆</a></dd>
+                        <dd><a href="/pageview">拉拉热门职位首页</a></dd>
+                        <dd><a href="javascript:;">拉拉贴心推荐职位</a></dd>
+                        {% if not session.get('job_title') %}
+                            <dd><a href="javascript:;">拉拉行业薪水涨福</a></dd>
+                            <dd><a href="javascript:;">拉拉行业的热度</a></dd>
+                        {% else %}
+                            <dd><a href="/base/salaryTop?job_title={{ session.get('job_title') }}">拉拉行业薪水涨福</a></dd>
+                            <dd><a href="/base/workCityHot?job_title={{ session.get('job_title') }}">拉拉行业的热度</a></dd>
+                        {% endif %}
+                        {% if session.get('exp')%}
+                            <dd><a href="/base/expSalaryTop?exp={{ session.get('exp') }}">拉拉同等工作经验top10行业</a></dd>
+                        {% else %}
+                            <dd><a href="javascript:;">拉拉同等工作经验top10行业</a></dd>
+                        {% endif %}
+                        <dd><a href="/base/hotCityWorkTop">拉拉全国行业热度</a></dd>
+                        <dd><a href="/base/maxSalaryTopn">拉拉薪水最高top10行业</a></dd>
+                        <dd><a href="/base/allSalaryTopn">拉拉全国各大行业薪水最高top10行业</a></dd>
+                    </dl>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+</div>
+
+</body>
+</html>

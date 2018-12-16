@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>最强10城市</title>
+</head>
+<body>
+{% include "admin.html" %}
+<div class="layui-body" style="padding-left: 20px; padding-top: 80px">
+<h1 class="layui-icon-fonts-html">全国主要城市各职业的薪水的top10</h1>
+    <table class="layui-table">
+        <colgroup>
+            <col width="150">
+            <col width="200">
+            <col>
+            <col width="50">
+        </colgroup>
+        <thead>
+        <tr>
+            <th>薪水</th>
+            <th>职业</th>
+            <th>地点</th>
+            <th>排名</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for result in results %}
+            <tr>
+                <td>{{ result[0] }}</td>
+                <td>{{ result[1] }}</td>
+                <td>{{ result[2] }}</td>
+                <td>{{ result[3] }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<script src="/static/layui.js"></script>
+
+<script>
+    //Demo
+    layui.use('form', function () {
+        var form = layui.form;
+        //监听提交
+        form.on('submit(formDemo)', function (data) {
+            layer.msg(JSON.stringify(data.field));
+            return false;
+        });
+    });
+</script>
+</body>
+</html>

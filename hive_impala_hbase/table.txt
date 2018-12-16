@@ -1,0 +1,164 @@
+/*
+	建表 数据导入初始表
+*/
+
+create table if not exists work.recruitment(
+job_title string,
+work_city string ,
+work_experience int,
+education string,
+company_demand string,
+release_date string,
+other_asks string,
+company_name string,
+salary float,
+position string,
+company_type string,
+company_size string,
+address string,
+job_message string
+) row format delimited fields terminated by '\t';
+
+/*
+	数据格式为parquet，用于数据导入表
+*/
+create table work.job_info(
+job_title string,
+work_city string,
+work_experience int,
+education string,
+company_demand string,
+other_asks string,
+company_name string,
+salary float,
+position string,
+company_type string,
+company_size string,
+address string,
+job_message string
+) 
+partitioned by(release_date string)
+row format delimited fields terminated by '\t'
+stored as parquet;
+
+/*
+	hive 预设
+*/
+set hive.exec.max.dynamic.partitions=2048;
+set hive.exec.max.dynamic.partitions.pernode=256;
+set hive.exec.max.created.files=10000;
+set hive.error.on.empty.partition=true;
+set hive.exec.dynamic.partition.mode=nonstrict;
+set hive.map.aggr=tru;
+set hive.groupby.skewindata=true;
+set io.sort.mb=100;  
+set mapred.child.java.opts=-Xmx200m;
+
+/*
+	数据导入
+*/
+insert overwrite table work.job_info
+partition (release_date)
+select job_title, work_city ,work_experience, education, company_demand, other_asks, company_name, salary, position, company_type, company_size, address, job_message,release_date
+from work.recruitment;
+
+/*
+	创建外部表
+*/
+CREATE external TABLE work.h_work(
+key string, 
+job_title string,
+work_city string,
+work_experience int,
+education string,
+company_demand string,
+other_asks string,
+company_name string,
+salary float,
+position string,
+company_type string,
+company_size string, 
+address string,
+job_message string,
+release_date string)  
+STORED BY 'org.apache.hadoop.hive.hbase.HBaseStorageHandler' 
+WITH SERDEPROPERTIES ( 
+'hbase.columns.mapping'='
+:key,
+info:job_title,
+info:work_city,
+info:work_experience,
+info:education,
+info:company_demand,
+info:other_asks,
+info:company_name,
+info:salary,
+info:position,
+info:company_type,
+info:company_size,
+info:address,
+info:job_message,
+info:release_date')
+TBLPROPERTIES ('hbase.table.name'='h_work', 'hbase.mapred.output.outputtable' ='h_work')
+
+/*
+	创建hase表
+*/
+create 'h_work', 'info'
+
+/*
+	id, 城市
+*/
+
+create table if not exists work.city 
+as
+select 
+case when id < 10 then concat('00', cast(id as string))
+when id < 100 then concat('0', cast(id as string))
+when id < 1000 then cast(id as string)
+else '000' end as id, city
+from (
+select row_number() over(order by num desc) id, work_city city
+from (
+select count(1) num, work_city
+from work.job_info
+group by work_city
+order by num desc) t1
+) t2;
+
+/*
+	id, 职能
+*/
+create table if not exists work.position 
+as
+select 
+case when id < 10 then concat('00', cast(id as string))
+when id < 100 then concat('0', cast(id as string))
+when id < 1000 then cast(id as string)
+else '000' end as id, position
+from (
+select row_number() over(order by num desc) id, position
+from (
+select count(1) num, position
+from work.job_info
+group by position
+order by num desc) t1
+) t2;
+
+/*
+	id, 城市,  id 职能, 原数据表，生成一张临时表
+*/
+create table if not exists work.tmp
+as
+select concat(c2.id, '_', c3.id, '_', cast(unix_timestamp(release_date, 'yyyy-MM-dd') as string), '_', cast(rand() as string)) key, c1.* 
+from work.job_info c1
+left join work.city c2
+on c1.work_city = c2.city
+left join work.position c3
+on c1.position = c3.position;
+
+/*
+	数据导入hbase
+*/
+insert into table work.hbm_job
+select * from work.tmp;

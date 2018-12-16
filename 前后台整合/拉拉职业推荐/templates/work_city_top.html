@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>最强10城市</title>
+    <script src="/static/echarts.min.js"></script>
+</head>
+<body>
+{% include "admin.html" %}
+<div class="layui-body" style="padding-left: 20px; padding-top: 80px">
+    <div id="main" style="width: 100%;height:80%;"></div>
+</div>
+
+<script src="/static/layui.js"></script>
+
+<script>
+    var myChart = echarts.init(document.getElementById('main'));
+    option = {
+        title: {
+            text: '{{ session.get('job_title') }}职业相热门城市'
+        },
+        xAxis: {
+            type: 'category',
+            data: [{% for d in data1 %}'{{ d }}',{% endfor %}]
+        },
+        yAxis: {
+            type: 'value'
+        },
+        series: [{
+            data: [{% for d in data2 %}'{{ d }}',{% endfor %}],
+            type: 'bar'
+        }]
+    };
+
+    myChart.setOption(option);
+</script>
+</body>
+</html>

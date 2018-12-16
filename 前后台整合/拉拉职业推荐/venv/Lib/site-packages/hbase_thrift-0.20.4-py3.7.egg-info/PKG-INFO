@@ -1,0 +1,11 @@
+Metadata-Version: 1.0
+Name: hbase-thrift
+Version: 0.20.4
+Summary: Python client for HBase Thrift interface
+Home-page: http://hbase.org/
+Author: Jeff Hammerbacher
+Author-email: hammer@cloudera.com
+License: UNKNOWN
+Description: UNKNOWN
+Keywords: database hbase thrift
+Platform: UNKNOWN
