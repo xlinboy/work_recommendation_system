@@ -14,7 +14,7 @@
 - 去掉重复的数据。
 - 将一些String字段，转换成int类型的字段，方便后期做数据分析。
 
-### 数据字段
+### 2.1 数据字段
 1. job_title string 职业标题
 2. work_city string 工作城市
 3. work_experience int 工作经验
